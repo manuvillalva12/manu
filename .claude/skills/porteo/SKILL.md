@@ -44,6 +44,15 @@ cómo.
   a las del sistema).
 - Semillas fijas para que las capturas sean comparables. Si el jugador de prueba muere por caídas
   (vistas aéreas), modo dios en el escenario.
+- Para tocar lo interno del juego (cámara, jugador, calidad) en una prueba: una **copia de prueba** con
+  `window.__T={…}` inyectado justo antes del arranque. Nunca va en la entrega.
+- Gráficos pesados (Ultra, RTX) en swiftshader tardan segundos por cuadro: `PASOS=1`, `h.manual(true)` y
+  `h.paso(n)` corren cuadros a pedido (con pasos fijos de 16,7 ms, así que también son repetibles). No
+  esperar con `h.esperar` ni usar `p.tap`.
+- "Se le ve el interior" de un modelo = caras al revés (el triángulo mira para adentro). Para
+  encontrarlas: un `ShaderMaterial` con `side: DoubleSide` que pinte `gl_FrontFacing ? gris : magenta`
+  y contar píxeles magenta desde varios lados. Arreglo: invertir el orden de los índices en el
+  generador de la malla (no tocar los materiales).
 - Reemplazos en archivos grandes sin leerlos: pares viejo/nuevo exactos que fallen si el texto
   aparece 0 o 2+ veces.
 

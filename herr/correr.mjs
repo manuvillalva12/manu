@@ -1,8 +1,11 @@
 // Corre un escenario de prueba sobre un HTML en Chromium, como si fuera un celu apaisado.
 //   node herr/correr.mjs esc.mjs juego.html [762x350] [2]
 // Variables: GPU='Adreno (TM) 610' (la página "cree" tener esa placa), WEBGL1=1 (sin WebGL 2),
-//            RED=1 (deja salir a internet), FOTOS=carpeta (por defecto ./fotos), TIEMPO=segundos.
-// El escenario exporta `default async (h)` con h = { p, foto, tocar, esperar, ev, errores, log }.
+//            RED=1 (deja salir a internet), FOTOS=carpeta (por defecto ./fotos), TIEMPO=segundos,
+//            TFOTO=ms de espera por foto (con swiftshader los gráficos pesados tardan),
+//            PASOS=1 (cuadros a pedido: h.manual(true) frena el requestAnimationFrame del juego y h.paso(n) corre
+//            n cuadros de 16,7 ms; devuelve los ms reales por cuadro. Sirve para gráficos que en swiftshader van lentos).
+// El escenario exporta `default async (h)` con h = { p, foto, tocar, esperar, ev, errores, log, paso, manual }.
 // Sale con 1 si la página tiró errores, con 2 si falló el escenario.
 import { createRequire } from 'node:module';
 import { pathToFileURL } from 'node:url';
@@ -42,6 +45,21 @@ if (process.env.WEBGL1) {
   });
 }
 
+if (process.env.PASOS) {
+  await ctx.addInitScript(() => {
+    const r0 = window.requestAnimationFrame.bind(window);
+    let pend = [], t = 0;
+    window.__manual = false;
+    window.requestAnimationFrame = cb => { if (window.__manual) { pend.push(cb); return 0; } return r0(cb); };
+    window.__paso = n => {
+      if (!t) t = performance.now();
+      const a = performance.now();
+      for (let i = 0; i < n; i++) { const l = pend; pend = []; t += 16.7; for (const cb of l) cb(t); }
+      return Math.round((performance.now() - a) / Math.max(1, n));
+    };
+  });
+}
+
 const p = await ctx.newPage();
 const errores = [];
 let cortados = 0;
@@ -57,10 +75,12 @@ const h = {
   p, errores, log,
   esperar: ms => p.waitForTimeout(ms),
   ev: (fn, arg) => p.evaluate(fn, arg),
+  paso: n => p.evaluate(n => window.__paso(n), n),
+  manual: async on => { await p.evaluate(v => { window.__manual = v; }, on); if (on) await p.waitForTimeout(300); },
   tocar: async q => (typeof q === 'string' ? p.tap(q) : p.touchscreen.tap(q.x, q.y)),
   foto: async nombre => {
     const f = path.join(fotos, nombre + '.png');
-    await p.screenshot({ path: f });
+    await p.screenshot({ path: f, timeout: +process.env.TFOTO || 30000 });
     log('foto', f);
     return f;
   },
