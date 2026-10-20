@@ -55,6 +55,11 @@ if (process.env.PASOS) {
       if (!t) t = performance.now();
       const a = performance.now();
       for (let i = 0; i < n; i++) { const l = pend; pend = []; t += 16.7; for (const cb of l) cb(t); }
+      /* esperar a que la placa termine (leer un píxel), así los ms son reales y la foto no queda esperando */
+      for (const c of document.querySelectorAll('canvas')) {
+        const g = c.getContext('webgl2') || c.getContext('webgl');
+        if (g) g.readPixels(0, 0, 1, 1, g.RGBA, g.UNSIGNED_BYTE, new Uint8Array(4));
+      }
       return Math.round((performance.now() - a) / Math.max(1, n));
     };
   });
