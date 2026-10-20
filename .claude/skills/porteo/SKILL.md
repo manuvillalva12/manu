@@ -5,7 +5,8 @@ description: Portar un juego nativo o un APK de Android (o hacer un juego propio
 
 # Porteo: juego nativo / APK → un HTML
 
-Las reglas (seguridad, tokens, entregas) son las de `CLAUDE.md`. Acá va el cómo.
+Las reglas (seguridad, tokens, entregas, nada de marcas ajenas) son las de `CLAUDE.md`. Acá va el
+cómo.
 
 ## Método
 1. **Qué hay**: de dónde salen los assets y las reglas (APK extraído, datos públicos). Mirar sólo lo
@@ -15,12 +16,11 @@ Las reglas (seguridad, tokens, entregas) son las de `CLAUDE.md`. Acá va el cóm
      `.so` y los `.dex`, sólo análisis estático.
 2. **Motor propio** en JS + WebGL2, con respaldo WebGL1 para teléfonos viejos. Nada del ejecutable
    del juego.
-3. **Empaquetador** (`empaquetar.py`): del APK/assets a una carpeta `sitio/` con hojas, íconos,
+3. **Empaquetador**: un script que lleve del APK/assets a una carpeta `sitio/` con hojas, íconos,
    sonidos y niveles. Lo público que haga falta (tablas de proyectos abiertos) **se baja al
    empaquetar**; no se commitea.
-4. **Armado** (`armar.py`): un HTML único (formato `porteo:un-archivo`: bloques en basE91 + gzip) o
-   una página + paquetes grandes. `desarmar.py` hace lo inverso: un HTML entregado se desarma y se
-   sigue desde ahí.
+4. **Armado**: un HTML único (bloques comprimidos: gzip + basE91) o una página + paquetes grandes.
+   Que se pueda desarmar: un HTML entregado se desarma y se sigue desde ahí.
 5. **Física y lógica fieles**: pasos fijos (p. ej. 240 por segundo), constantes de la fuente
    original, y comprobar contra la jugabilidad real.
 6. **Móvil primero**: táctil, teclado propio en pantalla, perfiles de gama (resolución de render,
@@ -34,23 +34,24 @@ Las reglas (seguridad, tokens, entregas) son las de `CLAUDE.md`. Acá va el cóm
 
 ## Pruebas
 - En este contenedor ya están Chromium (`PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers`) y Playwright
-  global: **no** correr `playwright install`. Si un proyecto fija otra versión, lanzar con
-  `executablePath: '/opt/pw-browsers/chromium'`.
-- Runner del dueño: `node herr/correr.mjs esc/ESCENARIO.mjs salida/juego.html 762x350 2`
-  (ancho×alto, densidad). El escenario exporta `default async (h)` con
-  `h = { p, foto, tocar, esperar, ev, errores, log }`. Si hay que rehacerlo, mantener esa interfaz.
-- Variables del runner: `GPU='Adreno (TM) 610'` (la página "cree" tener esa placa → caminos de gama
-  baja) y `WEBGL1=1` (sin WebGL 2).
-- Semillas fijas y modo plano para que las capturas sean comparables. Si el jugador de prueba muere
-  por caídas (vistas aéreas), modo dios en el escenario.
-- Juntar `pageerror` y `console.error`: cero errores es parte de "anda".
-- Reemplazos en archivos grandes sin leerlos: `herr/reemplazar.py` (pares `<<<<` viejo `====` nuevo
-  `>>>>` por stdin; falla si el texto aparece 0 o 2 veces).
+  global: **no** correr `playwright install`.
+- `node herr/correr.mjs esc.mjs juego.html [762x350] [2]` (ancho×alto apaisado, densidad): celu
+  táctil, swiftshader, fotos en `fotos/` (o `FOTOS=carpeta`). El escenario exporta
+  `default async (h)` con `h = { p, foto, tocar, esperar, ev, errores, log }`. Sale con código 1 si
+  hubo errores de la página.
+- Variables: `GPU='Adreno (TM) 610'` (la página "cree" tener esa placa → caminos de gama baja),
+  `WEBGL1=1` (sin WebGL 2), `RED=1` (deja salir a internet; por defecto se corta y las fuentes caen
+  a las del sistema).
+- Semillas fijas para que las capturas sean comparables. Si el jugador de prueba muere por caídas
+  (vistas aéreas), modo dios en el escenario.
+- Reemplazos en archivos grandes sin leerlos: pares viejo/nuevo exactos que fallen si el texto
+  aparece 0 o 2+ veces.
 
 ## Online sin servidor propio
 - Broker MQTT público como "correo" (mqtt.js dentro del HTML). Sala = un mundo, y el **número de
-  versión va en el nombre de la sala**: HTML nuevo = salas nuevas, que arrancan de cero; a los que
-  tienen una versión vieja se les avisa.
+  versión del protocolo va en el nombre de la sala**: protocolo nuevo = salas nuevas, que arrancan de
+  cero; a los que tienen una versión vieja se les avisa. Un cambio que no toca la red no cambia la
+  sala.
 - Cada jugador publica su estado (~100 ms si cambió algo), sus acciones y el chat en tópicos aparte.
   Sin anfitrión: cada uno es dueño sólo de su jugador y aplica lo de los demás.
 - Lo construido: un mensaje **retenido** por trozo (cambios en deflate + base64, a los ~3 s); al
@@ -63,16 +64,15 @@ Las reglas (seguridad, tokens, entregas) son las de `CLAUDE.md`. Acá va el cóm
 - Alternativa: un worker de Cloudflare.
 
 ## Hosting privado (Cloudflare Pages con puerta)
-- Herramienta del dueño: `herramientas/porteo/cloudflare/` (`_worker.js` = la puerta, `subir.py`,
-  `abrir.html`, `LEEME.md`).
-- Sin la clave no sale ni la página ni un byte del juego. Cookie firmada de un año, o enlace
-  `https://…/#clave=XXXX-XXXX-XXXX-XXXX` (lo de después del `#` no viaja al servidor).
+- Un `_worker.js` propio hace de puerta: sin la clave no sale ni la página ni un byte del juego.
+  Cookie firmada de un año, o enlace `https://…/#clave=XXXX-XXXX-XXXX-XXXX` (lo de después del `#`
+  no viaja al servidor).
 - La clave (16 caracteres, ~79 bits) va al proyecto como secreto, **nunca al repo**; cambiarla cierra
   todas las sesiones.
 - Fail-closed: si se pasa el tope gratis, error en vez de servir sin puerta. Verificar desde afuera
   que sin clave no sale nada (rutas disfrazadas, cookies falsas).
 - Dentro de otra página (visores de HTML) la cookie no viaja: la sesión va en la ruta
-  `/__s/<vence>.<firma>/`, y por eso no se manda `X-Frame-Options`.
+  (`/__s/<vence>.<firma>/`), y por eso no se manda `X-Frame-Options`.
 - Archivos > 25 MiB: partir en pedazos de 20 MB.
 
 ## Look "Java" (sirve para cualquier motor)

@@ -32,3 +32,4 @@ CONOCIMIENTO*.md
 node_modules/
 .venv/
 __pycache__/
+fotos/

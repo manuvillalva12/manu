@@ -5,6 +5,8 @@ description: Packs de shaders de Minecraft Bedrock (RenderDragon, .material.bin 
 
 # Shaders de Bedrock (RenderDragon)
 
+El pack es de Lucas: nombre, UUIDs, subpacks y banderas propias (nada de marcas ajenas).
+
 ## Lo básico
 - Bedrock 26.x (26.50 en septiembre de 2026): los shaders son `.material.bin` en
   `renderer/materials/` de un resource pack (`.mcpack`).
@@ -13,7 +15,7 @@ description: Packs de shaders de Minecraft Bedrock (RenderDragon, .material.bin 
   26.50. Desde 26.40 muchos shaders perdieron la detección de hora y niebla.
 - MB Loader ya inyecta: no hace falta otro mod. Un APK propio que parchee el juego = tocar binarios
   de terceros: no se hace.
-- Gama baja de referencia: Samsung M12 (Exynos 850, Mali-G52 MP1), sin Vibrant Visuals.
+- Ejemplo de gama baja: Exynos 850 / Mali-G52 MP1 (Samsung M12), sin Vibrant Visuals.
 
 ## Qué se puede y qué no
 - En el pipeline **forward** (sin Vibrant Visuals) **no hay** pasada de mapa de sombras ni de
@@ -46,7 +48,7 @@ description: Packs de shaders de Minecraft Bedrock (RenderDragon, .material.bin 
 
 ```sh
 # materiales sueltos (10-15 s)
-LD_LIBRARY_PATH=./tool/lib PY tool mats -p android -m RenderChunk Sky [-s JX_ULTRA]
+LD_LIBRARY_PATH=./tool/lib PY tool mats -p android -m RenderChunk Sky [-s ULTRA]
 # pack completo (~25 s) → build/<pack>-<v>-android.mcpack y build/pack-android/
 LD_LIBRARY_PATH=./tool/lib PY tool pack -p android
 # ver el GLSL generado de un material
@@ -54,37 +56,36 @@ lazurite unpack build/android/RenderChunk.material.bin -o carpeta
 ```
 - `PY` = el Python del venv. `tool/data/.builder.pkl` guarda la configuración (sistema, URL de
   materiales, shaderc).
-- Subpacks = banderas en `config.h` (`#ifdef JX_ULTRA`…); el de más a la derecha queda por defecto.
+- Subpacks = banderas en `config.h` (`#ifdef ULTRA`…); el de más a la derecha queda por defecto.
 
-## El pack propio: JX Java RD 2.0
-- `NL_TONEMAP_TYPE 5` (ACES) con `NL_JX_EXPOSURE 0.245`, saturación 1.15, sombra azulada
-  `NL_JX_SHADE_TINT`, niebla del sol `NL_JX_SUN_FOG`, bruma `NL_JX_HAZE`, rayos `NL_GODRAY 0.3`.
-- 2.0 suma `NL_JX_SUN_SHADOW` (sombras por cara), `NL_JX_MOON_SHADOW`, `NL_JX_UNBAKE`,
-  `NL_JX_FOLIAGE`, `NL_JX_BLOOM`. Bichos y jugador también tienen lado al sol y lado en sombra (la
-  mano no: su espacio no es el del mundo → `JX_NO_SUN_DIR`).
-- Apagado para gama baja: sombra y niebla de nubes, bruma de lluvia, arcoíris, brillo de glow, olas,
+## Ideas de look tipo Java (referencia)
+- Tonemap ACES (`NL_TONEMAP_TYPE 5`) con exposición ~0,245, saturación 1,15, sombra azulada,
+  niebla teñida por el sol, bruma de distancia y rayos de sol suaves (`NL_GODRAY 0.3`).
+- Sombras por cara de sol y de luna, deshacer el sombreado fijo, follaje con lado de sombra y bloom
+  falso. Bichos y jugador también con lado al sol y lado en sombra; la mano no (su espacio no es el
+  del mundo: apagarlo con una bandera propia).
+- Para gama baja, apagar: sombra y niebla de nubes, bruma de lluvia, arcoíris, brillo de glow, olas,
   aurora, estrellas fugaces, resalte de bordes de entidades, ruido de lava.
-- Amaneceres dorados, no rosados (`NL_DAWN_*` más cálidos). Subpacks `JX_COMPLETO`, `JX_ULTRA`,
-  `DEFAULT`. UUIDs propios, `min_supported_mc_version [1,26,50]`.
+- Amaneceres dorados, no rosados (`NL_DAWN_*` más cálidos). Subpacks tipo completo / ultra /
+  default con nombres propios, UUIDs propios, `min_supported_mc_version [1,26,50]`.
 
 ## Probar sin el teléfono
-- `validar_glsl.mjs <carpeta>`: compila **todos** los `.glsl` desempaquetados en WebGL2 (Chromium +
-  ANGLE/swiftshader). Meta: 0 fallas (2092 variantes).
-- `enlazar_glsl.mjs <carpeta> [filtro]`: enlaza vértice + fragmento de cada variante. Las 73 que no
-  enlazan **ya fallaban en Newb original** (pases `DepthOnlyOpaque` de Actor/ActorGlint/
-  ActorMultiTexture y `Stars/Transparent`, sin uso): comparar contra el original.
-- `preview/vista.mjs <carpeta con RenderChunk, Sky, SunMoon> <prefijo>`: dibuja con los GLSL
-  compilados un cielo, el sol y un terreno de prueba a 5 horas del día. Para comparar versiones,
-  una imagen antes | después.
-- Si esas herramientas se perdieron con el contenedor, rehacerlas chicas con Playwright.
+- Validar: compilar **todos** los `.glsl` desempaquetados en WebGL2 (Chromium + ANGLE/swiftshader).
+  Meta: 0 fallas (con Newb, ~2092 variantes).
+- Enlazar vértice + fragmento de cada variante. Unas 73 **ya fallan en Newb original** (pases
+  `DepthOnlyOpaque` de Actor/ActorGlint/ActorMultiTexture y `Stars/Transparent`, sin uso):
+  comparar contra el original.
+- Vista previa: con los GLSL compilados de RenderChunk, Sky y SunMoon, dibujar un cielo, el sol y un
+  terreno de prueba a 5 horas del día. Para comparar versiones, una imagen antes | después.
+- Esas herramientas se hacen chicas con Playwright (ver `herr/correr.mjs`).
 - Entrega: `tool pack` → desempaquetar todo → validar → enlazar → vista previa → escaneo de secretos
   del pack → mandar el `.mcpack` + una imagen.
 
 ## Trampas
 | Síntoma | Causa | Arreglo |
 |---|---|---|
-| `JX_ULTRA` no compila ("`NL_GLOW_TEX` undeclared") | `#undef NL_GLOW_TEX` rompe `nlGlow` | no deshacer la macro: condicionar la llamada con `#ifndef JX_ULTRA` en `fragment.sc` |
-| La vista previa dice "falta …/RenderChunk/passes" | otra estructura de carpetas al desempaquetar | enlaces simbólicos por material (`jx_flat`) |
+| El subpack ULTRA no compila ("`NL_GLOW_TEX` undeclared") | `#undef NL_GLOW_TEX` rompe `nlGlow` | no deshacer la macro: condicionar la llamada con `#ifndef ULTRA` en `fragment.sc` |
+| La vista previa dice "falta …/RenderChunk/passes" | otra estructura de carpetas al desempaquetar | una carpeta plana con enlaces simbólicos por material |
 | Texturas estiradas en rayas | UV en el borde con `fract` | recortar los UV a 0,0005 / 0,999 |
 | Atardeceres rosados | colores `DAWN` de Newb | subirlos hacia dorado |
 | `uv1` / `uv0` raros | vienen codificados | `uv1 = fract(a_texcoord1.y*vec2(256,4096))` = (luz de bloque, luz de cielo); `uv0 = fract(2*a_texcoord0)` |
