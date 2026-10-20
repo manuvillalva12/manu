@@ -1,0 +1,34 @@
+# Repo público: nada de juegos de terceros, salidas ni secretos.
+
+# Juegos y extracciones
+*.apk
+*.apks
+*.xapk
+*.aab
+*.obb
+*.dex
+sitio/
+datos/
+descargas/
+extraido/
+
+# Salidas
+salida/
+build/
+*.mcpack
+*.mcaddon
+*.material.bin
+
+# Privado
+privado/
+CONOCIMIENTO*.md
+*.keystore
+*.jks
+*.p12
+*.pem
+.env
+
+# Herramientas
+node_modules/
+.venv/
+__pycache__/
