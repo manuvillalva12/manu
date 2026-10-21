@@ -67,6 +67,10 @@ cómo.
   Para tocar, `p.touchscreen.tap(x, y)` con el elemento a la vista; para deslizar, eventos táctiles
   crudos por CDP (`Input.dispatchTouchEvent`: touchStart, varios touchMove, touchEnd).
   `Input.synthesizeScrollGesture` no mueve nada en este Chromium.
+- Audio sin parlantes: arrancarlo con un toque de verdad (la política de reproducción automática no
+  deja con un clic por código) y colgar un `AnalyserNode` del master para medir RMS y pico en cada
+  situación (menú, carrera, con y sin música). Lo que se programe en el tiempo, con el reloj del audio
+  (`AC.currentTime`), no con los cuadros: armar una malla puede trabar varios.
 - Interfaz girada por CSS (celu parado con el juego acostado): el navegador no desplaza las listas de
   adentro. Las desplaza el juego con eventos de puntero, en el eje que toque, con `touch-action:none`
   en esas pantallas; probarlo con pantalla vertical (p. ej. 350x762) y el giro puesto.
