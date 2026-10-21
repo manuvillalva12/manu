@@ -50,7 +50,9 @@ cómo.
   `window.__T={…}` inyectado justo antes del arranque. Nunca va en la entrega.
 - Gráficos pesados (Ultra, RTX) en swiftshader tardan segundos por cuadro: `PASOS=1`, `h.manual(true)` y
   `h.paso(n)` corren cuadros a pedido (con pasos fijos de 16,7 ms, así que también son repetibles;
-  `h.paso(n, 8.33)` simula 120 Hz). No esperar con `h.esperar` ni usar `p.tap`.
+  `h.paso(n, 8.33)` simula 120 Hz). No esperar con `h.esperar` ni usar `p.tap`. RTX puede tardar ~10 s
+  por cuadro hasta en el menú: una cinemática entera no entra; si su cuadro depende sólo de su reloj,
+  saltar el reloj a cada momento y sacar un cuadro (o `h.paso(n, 50)`, cuadros largos).
 - Llamadas de dibujo: `renderer.info` con `autoReset=false` durante un cuadro. Muchas piezas con el
   mismo material que se mueven cada una por su lado (un piloto) van en **una** `SkinnedMesh` con un
   hueso por pieza (peso 1). En three r128: `material.skinning=true` y ese material sólo en mallas con
@@ -69,7 +71,8 @@ cómo.
   `Input.synthesizeScrollGesture` no mueve nada en este Chromium.
 - Audio sin parlantes: arrancarlo con un toque de verdad (la política de reproducción automática no
   deja con un clic por código) y colgar un `AnalyserNode` del master para medir RMS y pico en cada
-  situación (menú, carrera, con y sin música). Lo que se programe en el tiempo, con el reloj del audio
+  situación (menú, carrera, con y sin música; la música tapa los efectos). En una cinemática, medir
+  esperando su reloj (`p.waitForFunction`), no un tiempo fijo. Lo que se programe en el tiempo, con el reloj del audio
   (`AC.currentTime`), no con los cuadros: armar una malla puede trabar varios.
 - Interfaz girada por CSS (celu parado con el juego acostado): el navegador no desplaza las listas de
   adentro. Las desplaza el juego con eventos de puntero, en el eje que toque, con `touch-action:none`
