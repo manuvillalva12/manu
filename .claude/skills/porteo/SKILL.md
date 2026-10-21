@@ -53,6 +53,13 @@ cómo.
   `h.paso(n, 8.33)` simula 120 Hz). No esperar con `h.esperar` ni usar `p.tap`. RTX puede tardar ~10 s
   por cuadro hasta en el menú: una cinemática entera no entra; si su cuadro depende sólo de su reloj,
   saltar el reloj a cada momento y sacar un cuadro (o `h.paso(n, 50)`, cuadros largos).
+- Cámara que sigue algo que avanza parejo: no con un `lerp` exponencial de la posición (con cuadros desparejos atrasa
+  distinto en cada cuadro y la moto "va y viene" contra la cámara). Atraso = velocidad suavizada / k, y lo que se suaviza
+  es dónde se ubica la cámara alrededor de ese punto. Medirlo con `h.paso(1, ms)` alternando 12 y 22 ms. Ojo también con
+  algo que prende y apaga cada pocos cuadros (un nitro vacío con el botón apretado): hace latir el ángulo de la cámara.
+- Perfil: en la copia de prueba se pueden envolver las funciones del cuadro (si son `function`, se reasignan) para
+  medir los ms de cada una.
+- Cada prueba en su propio comando y que termine en menos de 10 minutos (si no, la herramienta la manda a segundo plano).
 - Llamadas de dibujo: `renderer.info` con `autoReset=false` durante un cuadro. Muchas piezas con el
   mismo material que se mueven cada una por su lado (un piloto) van en **una** `SkinnedMesh` con un
   hueso por pieza (peso 1). En three r128: `material.skinning=true` y ese material sólo en mallas con
