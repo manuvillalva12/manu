@@ -37,8 +37,10 @@ cómo.
   global: **no** correr `playwright install`.
 - `node herr/correr.mjs esc.mjs juego.html [762x350] [2]` (ancho×alto apaisado, densidad): celu
   táctil, swiftshader, fotos en `fotos/` (o `FOTOS=carpeta`). El escenario exporta
-  `default async (h)` con `h = { p, foto, tocar, esperar, ev, errores, log }`. Sale con código 1 si
-  hubo errores de la página.
+  `default async (h)` con `h = { p, foto, tocar, esperar, ev, errores, log, paso, manual }`. Sale con
+  código 1 si hubo errores de la página.
+- Comparar: `python3 -I herr/grilla.py salida.png ancho recorte|- a1,a2 b1,b2` arma una grilla
+  (antes | después) para mirar una sola imagen.
 - Variables: `GPU='Adreno (TM) 610'` (la página "cree" tener esa placa → caminos de gama baja),
   `WEBGL1=1` (sin WebGL 2), `RED=1` (deja salir a internet; por defecto se corta y las fuentes caen
   a las del sistema).
@@ -47,12 +49,18 @@ cómo.
 - Para tocar lo interno del juego (cámara, jugador, calidad) en una prueba: una **copia de prueba** con
   `window.__T={…}` inyectado justo antes del arranque. Nunca va en la entrega.
 - Gráficos pesados (Ultra, RTX) en swiftshader tardan segundos por cuadro: `PASOS=1`, `h.manual(true)` y
-  `h.paso(n)` corren cuadros a pedido (con pasos fijos de 16,7 ms, así que también son repetibles). No
-  esperar con `h.esperar` ni usar `p.tap`.
+  `h.paso(n)` corren cuadros a pedido (con pasos fijos de 16,7 ms, así que también son repetibles;
+  `h.paso(n, 8.33)` simula 120 Hz). No esperar con `h.esperar` ni usar `p.tap`.
+- Llamadas de dibujo: `renderer.info` con `autoReset=false` durante un cuadro. Muchas piezas con el
+  mismo material que se mueven cada una por su lado (un piloto) van en **una** `SkinnedMesh` con un
+  hueso por pieza (peso 1). En three r128: `material.skinning=true` y ese material sólo en mallas con
+  huesos (r128 no cambia de programa por eso); una prueba que pisa materiales le da a esa malla un
+  `ShaderMaterial` propio con `skinning: true`.
 - "Se le ve el interior" de un modelo = caras al revés (el triángulo mira para adentro). Para
   encontrarlas: un `ShaderMaterial` con `side: DoubleSide` que pinte `gl_FrontFacing ? gris : magenta`
   y contar píxeles magenta desde varios lados. Arreglo: invertir el orden de los índices en el
-  generador de la malla (no tocar los materiales).
+  generador de la malla (no tocar los materiales). `python3 -I herr/magenta.py 'fotos/x-m*.png'`
+  cuenta los píxeles magenta de cada foto.
 - Reemplazos en archivos grandes sin leerlos: pares viejo/nuevo exactos que fallen si el texto
   aparece 0 o 2+ veces.
 

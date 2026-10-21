@@ -4,7 +4,8 @@
 //            RED=1 (deja salir a internet), FOTOS=carpeta (por defecto ./fotos), TIEMPO=segundos,
 //            TFOTO=ms de espera por foto (con swiftshader los gráficos pesados tardan),
 //            PASOS=1 (cuadros a pedido: h.manual(true) frena el requestAnimationFrame del juego y h.paso(n) corre
-//            n cuadros de 16,7 ms; devuelve los ms reales por cuadro. Sirve para gráficos que en swiftshader van lentos).
+//            n cuadros de 16,7 ms (o h.paso(n, 8.33) para una pantalla de 120 Hz); devuelve los ms reales por cuadro.
+//            Sirve para gráficos que en swiftshader van lentos y para probar otras frecuencias de pantalla).
 // El escenario exporta `default async (h)` con h = { p, foto, tocar, esperar, ev, errores, log, paso, manual }.
 // Sale con 1 si la página tiró errores, con 2 si falló el escenario.
 import { createRequire } from 'node:module';
@@ -51,10 +52,10 @@ if (process.env.PASOS) {
     let pend = [], t = 0;
     window.__manual = false;
     window.requestAnimationFrame = cb => { if (window.__manual) { pend.push(cb); return 0; } return r0(cb); };
-    window.__paso = n => {
+    window.__paso = (n, ms) => {
       if (!t) t = performance.now();
       const a = performance.now();
-      for (let i = 0; i < n; i++) { const l = pend; pend = []; t += 16.7; for (const cb of l) cb(t); }
+      for (let i = 0; i < n; i++) { const l = pend; pend = []; t += ms || 16.7; for (const cb of l) cb(t); }
       /* esperar a que la placa termine (leer un píxel), así los ms son reales y la foto no queda esperando */
       for (const c of document.querySelectorAll('canvas')) {
         const g = c.getContext('webgl2') || c.getContext('webgl');
@@ -80,7 +81,7 @@ const h = {
   p, errores, log,
   esperar: ms => p.waitForTimeout(ms),
   ev: (fn, arg) => p.evaluate(fn, arg),
-  paso: n => p.evaluate(n => window.__paso(n), n),
+  paso: (n, ms) => p.evaluate(([n, ms]) => window.__paso(n, ms), [n, ms]),
   manual: async on => { await p.evaluate(v => { window.__manual = v; }, on); if (on) await p.waitForTimeout(300); },
   tocar: async q => (typeof q === 'string' ? p.tap(q) : p.touchscreen.tap(q.x, q.y)),
   foto: async nombre => {
