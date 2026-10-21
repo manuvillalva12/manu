@@ -63,6 +63,13 @@ cómo.
   cuenta los píxeles magenta de cada foto.
 - Reemplazos en archivos grandes sin leerlos: pares viejo/nuevo exactos que fallen si el texto
   aparece 0 o 2+ veces.
+- Toques: un `el.click()` por código no prueba que se pueda tocar (no pasa por lo que está encima).
+  Para tocar, `p.touchscreen.tap(x, y)` con el elemento a la vista; para deslizar, eventos táctiles
+  crudos por CDP (`Input.dispatchTouchEvent`: touchStart, varios touchMove, touchEnd).
+  `Input.synthesizeScrollGesture` no mueve nada en este Chromium.
+- Interfaz girada por CSS (celu parado con el juego acostado): el navegador no desplaza las listas de
+  adentro. Las desplaza el juego con eventos de puntero, en el eje que toque, con `touch-action:none`
+  en esas pantallas; probarlo con pantalla vertical (p. ej. 350x762) y el giro puesto.
 
 ## Online sin servidor propio
 - Broker MQTT público como "correo" (mqtt.js dentro del HTML). Sala = un mundo, y el **número de
