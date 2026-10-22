@@ -48,6 +48,9 @@ if (process.env.WEBGL1) {
 
 if (process.env.PASOS) {
   await ctx.addInitScript(() => {
+    /* anotar qué canvas abrió WebGL la página (pedirle WebGL a uno 2D le rompe el contexto) */
+    const gc = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (t, ...a) { const g = gc.call(this, t, ...a); if (g && /webgl/.test(t)) this.__gl = g; return g; };
     const r0 = window.requestAnimationFrame.bind(window);
     let pend = [], t = 0;
     window.__manual = false;
@@ -58,7 +61,7 @@ if (process.env.PASOS) {
       for (let i = 0; i < n; i++) { const l = pend; pend = []; t += ms || 16.7; for (const cb of l) cb(t); }
       /* esperar a que la placa termine (leer un píxel), así los ms son reales y la foto no queda esperando */
       for (const c of document.querySelectorAll('canvas')) {
-        const g = c.getContext('webgl2') || c.getContext('webgl');
+        const g = c.__gl;
         if (g) g.readPixels(0, 0, 1, 1, g.RGBA, g.UNSIGNED_BYTE, new Uint8Array(4));
       }
       return Math.round((performance.now() - a) / Math.max(1, n));
