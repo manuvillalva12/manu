@@ -109,6 +109,17 @@ cómo.
   (`shadow.matrix` copiada **después** de dibujar la escena + `unpackRGBAToDepth`). Oclusión con la normal sacada de
   la profundidad; reflejos de pantalla sólo donde la normal mira para arriba. Desde atrás el haz casi no se ve: no
   exagerarlo. Para depurar, pintar cada parte sola cortando el sombreador antes del final.
+- "Bug de las paredes": a qué piso va cada triángulo se decide por su vértice **más bajo**, no por el centro (con el centro,
+  la punta de arriba de cada pared se iba al piso de arriba y desaparecía: dientes negros en todas las paredes). Para
+  encontrar huecos: dibujar todo con un sombreador doble cara que pinte de magenta las caras de atrás, desde los nodos del
+  recorrido, y por cada píxel magenta un rayo (materiales en doble cara mientras tanto) que diga dónde y qué es: sale una
+  lista de lugares. Las causas que aparecieron: marcos de puerta con la vuelta al revés, puntas de pared sin tapa, umbral
+  sin piso, ranura entre pisos (la pared de abajo tiene que llegar al piso de arriba), escalones sin cara de abajo,
+  carteles colgados sobre una puerta, cuadros de pasto salteados al lado de un edificio. La cámara: empujarla fuera de las
+  cajas con una esfera (si no, el plano cercano asoma del otro lado de la pared).
+- Personajes: una `SkinnedMesh` con huesos rígidos (cadera, pecho, cabeza, mandíbula, brazo/antebrazo, muslo/pierna) =
+  una llamada de dibujo. Miran a +z: brazo adelante = rotación x negativa; rodilla = x positiva. Para mirarlos, un
+  "estudio" en la prueba: se reemplazan `camUpdate`/`deathCam` y la luz del lugar por funciones de la prueba.
 - Sonidos falsos: los mismos generadores con otro destino (panner propio + paso bajo "detrás de la pared"); al
   real también se le pone el paso bajo cuando está tapado, si no se distinguen. Medir colgando el analizador del
   bus de efectos (sin ambiente) y congelando el panner, que el juego mueve en cada cuadro.
