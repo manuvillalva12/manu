@@ -85,6 +85,22 @@ cómo.
   adentro. Las desplaza el juego con eventos de puntero, en el eje que toque, con `touch-action:none`
   en esas pantallas; probarlo con pantalla vertical (p. ej. 350x762) y el giro puesto.
 
+## Juegos en 3D con interiores (terror, escuelas, casas)
+- Luz **horneada por vértice**: afuera la luna con un rayo de sombra contra los edificios, adentro las ventanas de
+  cada sala; el sombreador la suma al color. Así adentro queda oscuro de verdad sin sombras caras, y la linterna
+  (una `SpotLight`) más 2-4 `PointLight` repartidas entre las lámparas más cercanas hacen el resto. Lo que se mueve
+  toma la luz horneada del lugar donde está (un `uniform` por personaje, suavizado).
+- Las luces siempre en la escena (intensidad 0 para apagarlas): sacar o agregar una recompila los materiales y traba.
+- El mundo en una malla por material, **partida en trozos de 40 m**, y `camera.far` según la niebla: la cámara
+  descarta lo que no ve (de 214 a 105 llamadas de dibujo).
+- Escaleras y pasillos a la medida del jugador (una caja de 0,56 m de ancho): dejar lugar al pie de la escalera y
+  probar subir y bajar con cuadros a pedido, igual que saltar, deslizarse bajo algo y caer en un pozo.
+- Un monstruo "fantasma" que recorre nodos con A* y atraviesa muebles pero no paredes (rayos a la rodilla y al
+  pecho que ignoran lo bajo). Los atajos del jugador (un pozo, una barricada) quedan sin unión directa: lo obligan
+  a rodear.
+- Aunque el juego sea para celu, probar teclado y mouse con `p.keyboard`: una bandera que nunca se prendía dejó
+  sin saltar ni mirar a la PC.
+
 ## Online sin servidor propio
 - Broker MQTT público como "correo" (mqtt.js dentro del HTML). Sala = un mundo, y el **número de
   versión del protocolo va en el nombre de la sala**: protocolo nuevo = salas nuevas, que arrancan de
