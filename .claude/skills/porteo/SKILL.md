@@ -100,6 +100,18 @@ cómo.
   a rodear.
 - Aunque el juego sea para celu, probar teclado y mouse con `p.keyboard`: una bandera que nunca se prendía dejó
   sin saltar ni mirar a la PC.
+- Mapa grande: trozos por zona **y por franja de piso**; la franja de al lado sólo cerca de aberturas (escaleras,
+  huecos) y corte por distancia distinto adentro y afuera (de 296 a 135 llamadas).
+- Pasos que sólo cruza el jugador (rendijas): una caja de choque de un tipo que frena al monstruo y nada más. Un
+  escenario que mire que ningún mueble tape la entrada de ningún lado.
+- Posproceso por calidad: escena a un objetivo con `DepthTexture` (`UnsignedIntType`) → posición de cada píxel.
+  Haz de linterna: integrar el cono por el rayo de la vista hasta la pared; con sombras, el mapa de la `SpotLight`
+  (`shadow.matrix` copiada **después** de dibujar la escena + `unpackRGBAToDepth`). Oclusión con la normal sacada de
+  la profundidad; reflejos de pantalla sólo donde la normal mira para arriba. Desde atrás el haz casi no se ve: no
+  exagerarlo. Para depurar, pintar cada parte sola cortando el sombreador antes del final.
+- Sonidos falsos: los mismos generadores con otro destino (panner propio + paso bajo "detrás de la pared"); al
+  real también se le pone el paso bajo cuando está tapado, si no se distinguen. Medir colgando el analizador del
+  bus de efectos (sin ambiente) y congelando el panner, que el juego mueve en cada cuadro.
 
 ## Online sin servidor propio
 - Broker MQTT público como "correo" (mqtt.js dentro del HTML). Sala = un mundo, y el **número de
