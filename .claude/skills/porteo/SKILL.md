@@ -142,6 +142,16 @@ cómo.
   distancia propia), si no, el camino de ida pasa por al lado del jugador y lo vuelve a ver.
 - Estudio de personajes en una sala grande y vacía (el gimnasio): en un pasillo la cámara de costado queda dentro
   de la pared. Pruebas largas: `TIEMPO=450` (por defecto el escenario corta a los 120 s).
+- Caminar con detalle (sirve para cualquier personaje con huesos rígidos): piernas de dos huesos con IK por ley de
+  cosenos (la rodilla adelante, el pie plano + la punta); cada pie con su fase del ciclo (en el piso una parte, `duty`
+  0,62 caminando y 0,36 corriendo; en el aire, sube y vuelve con suavizado); la cadera sube al pasar el pie (caminar)
+  o se hunde al apoyar (correr). El largo del apoyo se topea por el alcance de la pierna (que patine un poco es mejor
+  que una pierna estirada flotando); al despegar la punta, subir el tobillo. Brazos con la pierna de enfrente,
+  hombros al revés de la cadera, inclinación en las curvas (−giro × velocidad) y por la aceleración suavizada, y la
+  cabeza que compensa. Revisar con una tira de cuadros (uno cada 4) además de las poses sueltas.
+- Lo que cuelga (mochila, pelo, falda, llavero, cables): un hueso con un resorte simple hacia "colgar derecho" (menos
+  la rotación de los padres) más un empuje por la velocidad y el giro. Los monstruos con inercia (arrancan y frenan,
+  aflojan en los giros cerrados): las pruebas que los teletransportan tienen que poner su velocidad en cero.
 
 ## Online sin servidor propio
 - Broker MQTT público como "correo" (mqtt.js dentro del HTML). Sala = un mundo, y el **número de
