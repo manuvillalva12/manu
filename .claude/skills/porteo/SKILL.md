@@ -123,6 +123,25 @@ cómo.
 - Sonidos falsos: los mismos generadores con otro destino (panner propio + paso bajo "detrás de la pared"); al
   real también se le pone el paso bajo cuando está tapado, si no se distinguen. Medir colgando el analizador del
   bus de efectos (sin ambiente) y congelando el panner, que el juego mueve en cada cuadro.
+- HDR en three r128: objetivo `HalfFloatType` sólo con WebGL 2 y `EXT_color_buffer_float` o
+  `EXT_color_buffer_half_float` (si no, la pantalla sale negra). Los colores del juego están pensados para la pantalla:
+  un ACES encima aplasta los oscuros. Mejor un tono propio que sólo dobla las luces (hombro por el canal más alto, así
+  no cambia el color, y lo muy fuerte va a blanco) con algo de exposición para compensar; el umbral del resplandor
+  sube (0,7-1,7). Medir media y recortes con PIL contra la versión sin HDR.
+- Neblina baja en el posproceso (con profundidad): luz que se suma (lo de la linterna, algo del propio píxel y un
+  poco del color de la niebla). Mezclar hacia el color de la niebla oscurece el piso en vez de empañarlo.
+- Brillo por pieza en Phong: un atributo por vértice (`spec`) y cambiar `#include <specularmap_fragment>` por
+  `float specularStrength=vSpec;`. El metal brilla y la tela no, en la misma malla.
+- Efectos con luz de corta duración (chispas): pedir prestada la última luz del pool de lámparas y devolverla
+  forzando que se vuelvan a elegir; la cantidad de luces no cambia y no se recompila nada. `Points` con una textura
+  radial: por debajo de ~0,1 m no se ven.
+- Voz del monstruo con `speechSynthesis` (tono 0,1, velocidad 0,78, volumen por distancia, subtítulo siempre;
+  cancelarla en la pausa y al reintentar). Sin voces instaladas no pasa nada: el subtítulo alcanza.
+- Director (como el de Alien: Isolation): una "amenaza" que sube mientras persigue o anda cerca; pasada cierta cifra
+  se va lejos un rato. El lugar: lejos del jugador **y del lado contrario** (puntaje = distancia al jugador − 1,2 ×
+  distancia propia), si no, el camino de ida pasa por al lado del jugador y lo vuelve a ver.
+- Estudio de personajes en una sala grande y vacía (el gimnasio): en un pasillo la cámara de costado queda dentro
+  de la pared. Pruebas largas: `TIEMPO=450` (por defecto el escenario corta a los 120 s).
 
 ## Online sin servidor propio
 - Broker MQTT público como "correo" (mqtt.js dentro del HTML). Sala = un mundo, y el **número de
