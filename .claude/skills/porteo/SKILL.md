@@ -152,6 +152,17 @@ cómo.
 - Lo que cuelga (mochila, pelo, falda, llavero, cables): un hueso con un resorte simple hacia "colgar derecho" (menos
   la rotación de los padres) más un empuje por la velocidad y el giro. Los monstruos con inercia (arrancan y frenan,
   aflojan en los giros cerrados): las pruebas que los teletransportan tienen que poner su velocidad en cero.
+- Pies que se apoyan en escalones: para cada pie, la altura del piso de verdad bajo su posición en el mundo (el suelo
+  o la tapa de caja más alta que se pueda pisar) se suma al blanco del IK, y la cadera baja si un pie queda más abajo.
+- "Realismo" en la calidad más alta, sin cambiar a PBR: brillo y especular por material + el albedo como mapa de
+  brillo; reflejos de pantalla en todo lo que mira para arriba (poco, y más borrosos lejos); relieve con paralaje
+  (marco tangente con derivadas, 12 pasos sin `break` para que las derivadas de la textura no fallen, y alturas
+  aparte donde el albedo engaña: baldosas claras y oscuras); una luz que rebota donde pega la linterna (una
+  `PointLight` más, prendida sólo en las calidades que la usan, porque cambia la cantidad de luces); halos de las
+  lámparas en el haz volumétrico; desenfoque de movimiento de cámara reproyectando con la matriz del cuadro anterior
+  (y sin desenfoque si la cámara saltó); texturas en 1024 hechas recién al elegir esa calidad.
+- Lo que se genera con la semilla del mapa: si se agrega algo que usa el mismo `rnd()` antes de armar la escuela,
+  cambia toda la escuela (y las pruebas). Guardar y restaurar la semilla alrededor.
 
 ## Online sin servidor propio
 - Broker MQTT público como "correo" (mqtt.js dentro del HTML). Sala = un mundo, y el **número de
