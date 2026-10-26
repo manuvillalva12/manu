@@ -80,7 +80,10 @@ cómo.
   deja con un clic por código) y colgar un `AnalyserNode` del master para medir RMS y pico en cada
   situación (menú, carrera, con y sin música; la música tapa los efectos). En una cinemática, medir
   esperando su reloj (`p.waitForFunction`), no un tiempo fijo. Lo que se programe en el tiempo, con el reloj del audio
-  (`AC.currentTime`), no con los cuadros: armar una malla puede trabar varios.
+  (`AC.currentTime`), no con los cuadros: armar una malla puede trabar varios. Para comparar niveles entre
+  versiones, medir **sin cuadros** (`h.manual(true)` antes de medir): con el hilo ocupado dibujando, el analizador se
+  consulta menos y pierde picos (parece que un sonido bajó y no). La versión anterior se mide igual: a su HTML
+  entregado se le inyecta el gancho antes de la marca de arranque.
 - Interfaz girada por CSS (celu parado con el juego acostado): el navegador no desplaza las listas de
   adentro. Las desplaza el juego con eventos de puntero, en el eje que toque, con `touch-action:none`
   en esas pantallas; probarlo con pantalla vertical (p. ej. 350x762) y el giro puesto.
@@ -171,6 +174,23 @@ cómo.
   del tubo más cercano (y chisporroteo si titila), goteras y crujidos en lugares al azar cerca, silbido en ventanas
   rotas. Medirlos con el analizador poniendo el panner cerca del oyente y apagando lo que el juego mueve en cada
   cuadro (si no, el juego lo vuelve a poner lejos y se mide silencio).
+- Screamer (susto de muerte): 0,15 s de silencio con el monstruo quieto (todo lo demás se baja; el golpe va por un
+  canal propio, conectado después de ese volumen) y recién ahí el golpe en capas: chasquido, grave que baja con
+  saturación (para que el parlante del celu lo "oiga"), grito con formantes (3 voces desafinadas con vibrato y
+  temblor), acorde con tritono y cuerdas chillonas; una variante distinta cada vez. En imagen: la cara se tira a
+  medio metro en 3 cuadros, golpe de zoom (FOV −16), un par de cuadros en negativo y destello (un `div` con
+  `mix-blend-mode: difference` o blanco: anda sin postproceso), sacudón y el HUD oculto. Encuadre: apuntar a donde
+  quedó la cabeza (hueso de la cabeza del cuadro anterior) y correr el cuerpo para que la cara quede a la distancia
+  pedida; si no, al inclinarse la cabeza se sale de cuadro. Al final, oídos zumbando: pitido agudo y un pasabajos
+  en el master que se saca al reintentar. Sustos sin morir: el mismo golpe más corto, sólo si está cerca y a la vista.
+- Ventilaciones (sólo entra el jugador): conductos bajos (0,6 m) donde no se cabe agachado; adentro una caja de
+  choque que frena sólo a los monstruos (el tipo que el jugador ignora); sin vista ni golpe mientras está adentro;
+  primera persona adentro (la de atrás se tapa con el propio cuerpo); ayuda que centra frente a la rejilla y en el
+  conducto; caras de adentro con luz propia casi nula más la que entra por cada abertura. Ojo con lo que tapan: una
+  ventana rota encima queda sin lugar para la cabeza; el salto tiene que aceptar ese escalón bajo.
+- Sonido realista barato: golpes con síntesis modal (senos con caída propia; proporciones de chapa, acero o madera;
+  cada golpe con otras amplitudes); tapado por pared = pasabajos **y** −6 dB; lejos = más reverberación que sonido
+  directo (envío a la reverb que crece con la distancia); trueno = chasquidos si cayó cerca y retumbo en oleadas.
 - Rayos de luna: por ventana que mira a la luna, un prisma aditivo que baja hasta el piso (alfa por vértice que se
   apaga) y el rectángulo iluminado; todo en una malla. Sombras de contacto: una mancha suave bajo cada personaje.
 
