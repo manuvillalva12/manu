@@ -163,6 +163,16 @@ cómo.
   (y sin desenfoque si la cámara saltó); texturas en 1024 hechas recién al elegir esa calidad.
 - Lo que se genera con la semilla del mapa: si se agrega algo que usa el mismo `rnd()` antes de armar la escuela,
   cambia toda la escuela (y las pruebas). Guardar y restaurar la semilla alrededor.
+- Animación con más vida, barata: al cambiar de pose, mezclar todos los huesos con los del cuadro anterior un
+  instante (exponencial, ~70 ms) y nada salta; caminar para atrás o de costado = el paso va hacia donde se mueve
+  (la parte lateral, con la rotación z del muslo); y acciones cortas que se suman a la pose (agarrar, empujar,
+  sacudir la linterna, sobresalto con un salto del miedo, rengueo después de un golpe).
+- Ambiente que se nota sin música: eco corto con un `DelayNode` realimentado (más en pasillos y gimnasio), zumbido
+  del tubo más cercano (y chisporroteo si titila), goteras y crujidos en lugares al azar cerca, silbido en ventanas
+  rotas. Medirlos con el analizador poniendo el panner cerca del oyente y apagando lo que el juego mueve en cada
+  cuadro (si no, el juego lo vuelve a poner lejos y se mide silencio).
+- Rayos de luna: por ventana que mira a la luna, un prisma aditivo que baja hasta el piso (alfa por vértice que se
+  apaga) y el rectángulo iluminado; todo en una malla. Sombras de contacto: una mancha suave bajo cada personaje.
 
 ## Online sin servidor propio
 - Broker MQTT público como "correo" (mqtt.js dentro del HTML). Sala = un mundo, y el **número de
