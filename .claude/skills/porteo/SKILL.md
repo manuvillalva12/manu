@@ -75,7 +75,9 @@ cómo.
 - Toques: un `el.click()` por código no prueba que se pueda tocar (no pasa por lo que está encima).
   Para tocar, `p.touchscreen.tap(x, y)` con el elemento a la vista; para deslizar, eventos táctiles
   crudos por CDP (`Input.dispatchTouchEvent`: touchStart, varios touchMove, touchEnd).
-  `Input.synthesizeScrollGesture` no mueve nada en este Chromium.
+  `Input.synthesizeScrollGesture` no mueve nada en este Chromium. Multitáctil: `touchPoints` es la lista entera de dedos
+  apoyados; para levantar uno solo, un `touchMove` con los que quedan (`touchEnd` levanta todos).
+- Transiciones de CSS con cuadros a pedido: corren en tiempo real, no con `h.paso`; antes de la foto, `h.esperar` un rato.
 - Audio sin parlantes: arrancarlo con un toque de verdad (la política de reproducción automática no
   deja con un clic por código) y colgar un `AnalyserNode` del master para medir RMS y pico en cada
   situación (menú, carrera, con y sin música; la música tapa los efectos). En una cinemática, medir
@@ -191,6 +193,17 @@ cómo.
 - Sonido realista barato: golpes con síntesis modal (senos con caída propia; proporciones de chapa, acero o madera;
   cada golpe con otras amplitudes); tapado por pared = pasabajos **y** −6 dB; lejos = más reverberación que sonido
   directo (envío a la reverb que crece con la distancia); trueno = chasquidos si cayó cerca y retumbo en oleadas.
+- Joystick fijo (lo que se pide en el celu): la base quieta en su lugar (su centro sale de `offsetLeft/Top`, en
+  coordenadas de la app aunque esté girada); se agarra sólo cerca de la base (~2,3 radios; más lejos, ese dedo mira),
+  la perilla no se sale y una zona muerta chica. Correr con botón: tocar prende y apaga, mantenido corre mientras se
+  aprieta, y se apaga solo si te quedás quieto o sin aire. Dejar aparte una marca de "correr de afuera" para las
+  pruebas y las cinemáticas.
+- Cinemática con el motor (un final): su propio reloj en los pasos fijos; el jugador se maneja con las mismas
+  entradas (rumbo, avanzar, correr) y así anima igual; la IA quieta y los monstruos movidos a mano; cada evento una
+  sola vez (tabla de hechos); la cámara de cada toma sale del reloj. Saltear = llevar el reloj a los títulos **y dar
+  por hechos** los eventos del medio (si no, suenan todos juntos). Franjas, subtítulos y títulos en el DOM.
+  Amanecer barato: un uniforme más en la luz horneada (cielo), niebla y fondo cálidos y un resplandor (sprite) dentro
+  del plano lejano. Ojo con el CSS: una clase con `opacity` le gana al "aparece de a poco" de otra.
 - Rayos de luna: por ventana que mira a la luna, un prisma aditivo que baja hasta el piso (alfa por vértice que se
   apaga) y el rectángulo iluminado; todo en una malla. Sombras de contacto: una mancha suave bajo cada personaje.
 
