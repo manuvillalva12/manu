@@ -204,6 +204,9 @@ cómo.
   por hechos** los eventos del medio (si no, suenan todos juntos). Franjas, subtítulos y títulos en el DOM.
   Amanecer barato: un uniforme más en la luz horneada (cielo), niebla y fondo cálidos y un resplandor (sprite) dentro
   del plano lejano. Ojo con el CSS: una clase con `opacity` le gana al "aparece de a poco" de otra.
+- Códigos (de creador, trucos): en el HTML va sólo la huella (FNV-1a de 32 bits), no el código. El campo de texto
+  necesita `user-select:text` si el `body` lo tiene en `none` (si no, en el celu no se escribe), el teclado del juego
+  tiene que ignorar lo que se tipea en un `input`, y el campo se vacía después de cada intento.
 - Rayos de luna: por ventana que mira a la luna, un prisma aditivo que baja hasta el piso (alfa por vértice que se
   apaga) y el rectángulo iluminado; todo en una malla. Sombras de contacto: una mancha suave bajo cada personaje.
 
