@@ -57,6 +57,11 @@ cómo.
   distinto en cada cuadro y la moto "va y viene" contra la cámara). Atraso = velocidad suavizada / k, y lo que se suaviza
   es dónde se ubica la cámara alrededor de ese punto. Medirlo con `h.paso(1, ms)` alternando 12 y 22 ms. Ojo también con
   algo que prende y apaga cada pocos cuadros (un nitro vacío con el botón apretado): hace latir el ángulo de la cámara.
+- Balance de un juego por reglas (noches, oleadas): en la copia de prueba, una función que corre la lógica sola (sin dibujar,
+  con `Math.random` sembrado) con jugadores de prueba ("perfecto", "realista" con demora y gasto, "quieto"): las 5 noches
+  en segundos, en vez de miles de cuadros 3D en swiftshader.
+- Brillo (bloom) en el post: nada de muestras en anillo con giro al azar (salen chispas y cruces); un cuarto de
+  resolución con umbral y desenfoque separable en dos pasadas. Sin media precisión (WebGL 1), umbral alto y menos fuerza.
 - Perfil: en la copia de prueba se pueden envolver las funciones del cuadro (si son `function`, se reasignan) para
   medir los ms de cada una.
 - Cada prueba en su propio comando y que termine en menos de 10 minutos (si no, la herramienta la manda a segundo plano).
