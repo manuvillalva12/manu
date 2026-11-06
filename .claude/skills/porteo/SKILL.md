@@ -57,6 +57,9 @@ cómo.
   distinto en cada cuadro y la moto "va y viene" contra la cámara). Atraso = velocidad suavizada / k, y lo que se suaviza
   es dónde se ubica la cámara alrededor de ese punto. Medirlo con `h.paso(1, ms)` alternando 12 y 22 ms. Ojo también con
   algo que prende y apaga cada pocos cuadros (un nitro vacío con el botón apretado): hace latir el ángulo de la cámara.
+- Personajes hechos de muchas piezas (esferas, cilindros): juntar en cada grupo que se mueve junto (cuerpo, brazo,
+  cabeza, mandíbula) las piezas del mismo material en una sola malla (geometrías con su matriz aplicada): 431 → 158
+  llamadas en un menú con cinco. Relieve sin bajar nada: mapa de normales sacado del brillo de la textura de lienzo.
 - Balance de un juego por reglas (noches, oleadas): en la copia de prueba, una función que corre la lógica sola (sin dibujar,
   con `Math.random` sembrado) con jugadores de prueba ("perfecto", "realista" con demora y gasto, "quieto"): las 5 noches
   en segundos, en vez de miles de cuadros 3D en swiftshader.
