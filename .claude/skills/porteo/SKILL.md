@@ -60,6 +60,9 @@ cómo.
 - Personajes hechos de muchas piezas (esferas, cilindros): juntar en cada grupo que se mueve junto (cuerpo, brazo,
   cabeza, mandíbula) las piezas del mismo material en una sola malla (geometrías con su matriz aplicada): 431 → 158
   llamadas en un menú con cinco. Relieve sin bajar nada: mapa de normales sacado del brillo de la textura de lienzo.
+- Personajes con forma (sin modelos bajados): esfera esculpida (radio por dirección con campanas gaussianas: hocico,
+  mejillas, cuencas) + color por vértice, brazos y piernas con `LatheGeometry`, colas con `TubeGeometry`; un solo material
+  de felpa (blanco + `vertexColors`) para todos, así las piezas se juntan y casi no suman llamadas.
 - Balance de un juego por reglas (noches, oleadas): en la copia de prueba, una función que corre la lógica sola (sin dibujar,
   con `Math.random` sembrado) con jugadores de prueba ("perfecto", "realista" con demora y gasto, "quieto"): las 5 noches
   en segundos, en vez de miles de cuadros 3D en swiftshader.
