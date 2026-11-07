@@ -97,6 +97,9 @@ cómo.
   versiones, medir **sin cuadros** (`h.manual(true)` antes de medir): con el hilo ocupado dibujando, el analizador se
   consulta menos y pierde picos (parece que un sonido bajó y no). La versión anterior se mide igual: a su HTML
   entregado se le inyecta el gancho antes de la marca de arranque.
+- Botón para girar todo el juego (lienzos dentro de un `div` con `rotate(90deg)` / `rotate(-90deg)` y tamaño en px):
+  cada toque y cada arrastre pasan de la pantalla al juego girado (90°: x = clientY, y = ancho − clientX); la prueba
+  necesita la cuenta inversa para tocar. Probar con 350x762 tocando de verdad.
 - Interfaz girada por CSS (celu parado con el juego acostado): el navegador no desplaza las listas de
   adentro. Las desplaza el juego con eventos de puntero, en el eje que toque, con `touch-action:none`
   en esas pantallas; probarlo con pantalla vertical (p. ej. 350x762) y el giro puesto.
