@@ -68,6 +68,15 @@ cómo.
   momentos elegidos de cada variante. Dos trampas: la mandíbula que baja se mete en el pecho y la boca "no abre" (estirar
   el cuello, echar la cabeza atrás y poner paladar y garganta oscuros), y la cara se va de cuadro cuando la cámara cae o
   gira (calcular la altura del modelo desde la cámara para que la cabeza quede siempre cerca del centro).
+- Primer plano exacto en primera persona (una boca que te muerde, una mano que te agarra): no calcular la posición del
+  personaje; ponerle la pose, medir dónde quedó el punto que importa (`localToWorld`) y correr todo el modelo lo que falte
+  hasta el punto delante de la cámara. Manos al lugar con dos huesos (ley del coseno) y ojos que siguen a la cámara
+  corriendo iris y pupila. Un cierre dibujado en 2D se ve de dibujito: mejor la boca real y, justo antes de que la
+  cámara atraviese la malla, oscurecer.
+- Sonido sin parlantes, medido de verdad: en la copia de prueba cambiar `AudioContext` por `OfflineAudioContext`, disparar
+  cada sonido, `startRendering()` y sacar pico, volumen medio y duración. Aparecen los mudos y los que saturan. Suena
+  más real con reverberación (impulso de ruido que se apaga), golpes por capas (grave + chasquido + parciales del metal),
+  crujidos de granitos de ruido, un limitador al final y un pasabajos general para "cabeza tapada".
 - Balance de un juego por reglas (noches, oleadas): en la copia de prueba, una función que corre la lógica sola (sin dibujar,
   con `Math.random` sembrado) con jugadores de prueba ("perfecto", "realista" con demora y gasto, "quieto"): las 5 noches
   en segundos, en vez de miles de cuadros 3D en swiftshader.
