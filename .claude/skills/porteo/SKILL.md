@@ -63,6 +63,11 @@ cómo.
 - Personajes con forma (sin modelos bajados): esfera esculpida (radio por dirección con campanas gaussianas: hocico,
   mejillas, cuencas) + color por vértice, brazos y piernas con `LatheGeometry`, colas con `TubeGeometry`; un solo material
   de felpa (blanco + `vertexColors`) para todos, así las piezas se juntan y casi no suman llamadas.
+- Animaciones de ataque (sustos): una función que para cada instante devuelve todo junto (dónde está el personaje, su pose
+  y qué hace la cámara) con claves en el tiempo, y los sonidos como lista `[segundo, sonido]`. Probarla sacando fotos en
+  momentos elegidos de cada variante. Dos trampas: la mandíbula que baja se mete en el pecho y la boca "no abre" (estirar
+  el cuello, echar la cabeza atrás y poner paladar y garganta oscuros), y la cara se va de cuadro cuando la cámara cae o
+  gira (calcular la altura del modelo desde la cámara para que la cabeza quede siempre cerca del centro).
 - Balance de un juego por reglas (noches, oleadas): en la copia de prueba, una función que corre la lógica sola (sin dibujar,
   con `Math.random` sembrado) con jugadores de prueba ("perfecto", "realista" con demora y gasto, "quieto"): las 5 noches
   en segundos, en vez de miles de cuadros 3D en swiftshader.
