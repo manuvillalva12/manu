@@ -77,6 +77,10 @@ cómo.
   cada sonido, `startRendering()` y sacar pico, volumen medio y duración. Aparecen los mudos y los que saturan. Suena
   más real con reverberación (impulso de ruido que se apaga), golpes por capas (grave + chasquido + parciales del metal),
   crujidos de granitos de ruido, un limitador al final y un pasabajos general para "cabeza tapada".
+- Personajes que "aparecen" de un lugar a otro: guardar en cada modelo el último lugar y, si cambió, hacerlo caminar desde
+  la entrada de ese lugar (piernas con cadera y rodilla, cuerpo que sube y baja) y girar al llegar; la duración se recorta
+  si la lógica le da menos tiempo (que no llegue tarde al susto). Ojo con las pruebas que dejan una luz prendida: si la
+  luz los ahuyenta, desaparecen de la foto.
 - Balance de un juego por reglas (noches, oleadas): en la copia de prueba, una función que corre la lógica sola (sin dibujar,
   con `Math.random` sembrado) con jugadores de prueba ("perfecto", "realista" con demora y gasto, "quieto"): las 5 noches
   en segundos, en vez de miles de cuadros 3D en swiftshader.
