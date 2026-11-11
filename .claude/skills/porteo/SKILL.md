@@ -86,6 +86,9 @@ cómo.
   en segundos, en vez de miles de cuadros 3D en swiftshader.
 - Brillo (bloom) en el post: nada de muestras en anillo con giro al azar (salen chispas y cruces); un cuarto de
   resolución con umbral y desenfoque separable en dos pasadas. Sin media precisión (WebGL 1), umbral alto y menos fuerza.
+- Dificultad con un bot que juega sin dibujar (llamar a la lógica en un bucle): uno perfecto gana siempre y no dice
+  nada. Darle reacción (0,6 a 1,2 s), giro máximo (1,4 a 2,6 rad/s) y error de puntería, y ajustar hasta que el
+  rápido gane casi siempre y el lento más o menos la mitad.
 - Perfil: en la copia de prueba se pueden envolver las funciones del cuadro (si son `function`, se reasignan) para
   medir los ms de cada una.
 - Cada prueba en su propio comando y que termine en menos de 10 minutos (si no, la herramienta la manda a segundo plano).
@@ -128,6 +131,10 @@ cómo.
   (una `SpotLight`) más 2-4 `PointLight` repartidas entre las lámparas más cercanas hacen el resto. Lo que se mueve
   toma la luz horneada del lugar donde está (un `uniform` por personaje, suavizado).
 - Las luces siempre en la escena (intensidad 0 para apagarlas): sacar o agregar una recompila los materiales y traba.
+  Excepción: las que usa un solo modo de juego (la linterna de una noche aparte) van con `visible = false` fuera de
+  él, porque con intensidad 0 se calculan igual en cada píxel. three r128 guarda en cada material un programa por
+  combinación de luces: recompila sólo la primera vez, así que esa vez tiene que caer en una pantalla quieta o un
+  fundido a negro.
 - El mundo en una malla por material, **partida en trozos de 40 m**, y `camera.far` según la niebla: la cámara
   descarta lo que no ve (de 214 a 105 llamadas de dibujo).
 - Escaleras y pasillos a la medida del jugador (una caja de 0,56 m de ancho): dejar lugar al pie de la escalera y
@@ -135,6 +142,9 @@ cómo.
 - Un monstruo "fantasma" que recorre nodos con A* y atraviesa muebles pero no paredes (rayos a la rodilla y al
   pecho que ignoran lo bajo). Los atajos del jugador (un pozo, una barricada) quedan sin unión directa: lo obligan
   a rodear.
+- Perseguir dentro de un cuarto con mesas: deslizarse contra el obstáculo se traba en el punto más cercano al
+  objetivo. Mirar ~0,5 m adelante: si está tapado, probar ángulos cada vez más abiertos (0,45; 0,9; 1,35 rad) y
+  siempre del mismo lado un rato; si todo está tapado, cambiar de lado.
 - Aunque el juego sea para celu, probar teclado y mouse con `p.keyboard`: una bandera que nunca se prendía dejó
   sin saltar ni mirar a la PC.
 - Mapa grande: trozos por zona **y por franja de piso**; la franja de al lado sólo cerca de aberturas (escaleras,
