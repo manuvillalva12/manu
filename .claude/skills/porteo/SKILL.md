@@ -248,7 +248,10 @@ cómo.
   del plano lejano. Ojo con el CSS: una clase con `opacity` le gana al "aparece de a poco" de otra.
 - Códigos (de creador, trucos): en el HTML va sólo la huella (FNV-1a de 32 bits), no el código. El campo de texto
   necesita `user-select:text` si el `body` lo tiene en `none` (si no, en el celu no se escribe), el teclado del juego
-  tiene que ignorar lo que se tipea en un `input`, y el campo se vacía después de cada intento.
+  tiene que ignorar lo que se tipea en un `input`, y el campo se vacía después de cada intento. Si la interfaz se
+  dibuja en un lienzo, el campo va en el DOM dentro del contenedor que gira (así gira con el juego), ubicado con la
+  misma escala y corrimiento del lienzo, con letra de 16 px o más (si no, el iPhone hace zoom). En la prueba, el
+  código va por una variable de entorno, no en el escenario.
 - Rayos de luna: por ventana que mira a la luna, un prisma aditivo que baja hasta el piso (alfa por vértice que se
   apaga) y el rectángulo iluminado; todo en una malla. Sombras de contacto: una mancha suave bajo cada personaje.
 
