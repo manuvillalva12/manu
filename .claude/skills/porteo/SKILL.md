@@ -252,6 +252,11 @@ cómo.
   dibuja en un lienzo, el campo va en el DOM dentro del contenedor que gira (así gira con el juego), ubicado con la
   misma escala y corrimiento del lienzo, con letra de 16 px o más (si no, el iPhone hace zoom). En la prueba, el
   código va por una variable de entorno, no en el escenario.
+- Incendio barato: un solo `Points` con `ShaderMaterial` para todas las llamas (y otro para el humo); cada partícula
+  lleva su hora de encendido, velocidad, tamaño y fase, y el reloj de la escena es un uniform: el fuego avanza solo y
+  se puede saltar a cualquier segundo. Llamas aditivas con poca intensidad por partícula (si no, al juntarse quedan
+  blancas). Una foto de fondo (la calle detrás de una vidriera) va con `MeshBasicMaterial`: si recibe luz, la
+  linterna la delata.
 - Rayos de luna: por ventana que mira a la luna, un prisma aditivo que baja hasta el piso (alfa por vértice que se
   apaga) y el rectángulo iluminado; todo en una malla. Sombras de contacto: una mancha suave bajo cada personaje.
 
