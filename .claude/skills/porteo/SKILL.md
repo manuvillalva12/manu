@@ -256,7 +256,9 @@ cómo.
   lleva su hora de encendido, velocidad, tamaño y fase, y el reloj de la escena es un uniform: el fuego avanza solo y
   se puede saltar a cualquier segundo. Llamas aditivas con poca intensidad por partícula (si no, al juntarse quedan
   blancas). Una foto de fondo (la calle detrás de una vidriera) va con `MeshBasicMaterial`: si recibe luz, la
-  linterna la delata.
+  linterna la delata. Para que se vea a alguien quemándose, poner algo oscuro detrás (contra el resplandor, sus llamas
+  aditivas no se ven). Para chamuscarlo, usar copias de sus materiales (los demás personajes comparten los mismos):
+  oscurecer el color, prender el emisivo y devolver los originales al terminar.
 - Rayos de luna: por ventana que mira a la luna, un prisma aditivo que baja hasta el piso (alfa por vértice que se
   apaga) y el rectángulo iluminado; todo en una malla. Sombras de contacto: una mancha suave bajo cada personaje.
 
