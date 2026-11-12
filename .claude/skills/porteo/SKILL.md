@@ -262,6 +262,17 @@ cómo.
 - Rayos de luna: por ventana que mira a la luna, un prisma aditivo que baja hasta el piso (alfa por vértice que se
   apaga) y el rectángulo iluminado; todo en una malla. Sombras de contacto: una mancha suave bajo cada personaje.
 
+## Mundos que siguen un camino (un río, una ruta)
+- Guardar el camino cada 2 m (posición, rumbo, ancho, velocidad) e ir alargándolo con curvas suaves (radio de giro
+  de 150 m o más, así el terreno no se pliega). Todo se mide en (s, u): metros a lo largo y a un costado.
+- El terreno, por tramos de 64 m en coordenadas del camino: filas a lo largo y columnas de borde a borde, más
+  juntas cerca del camino. El cauce, las orillas y las colinas salen de una sola función del costado `h(u)` más
+  ruido. Se arma un tramo por cuadro adelante y se borra lo de atrás; árboles y piedras, instanciados por tramo.
+- `clone()` de three r128 copia `userData` como texto: las referencias a partes (alas, mandíbulas) se pierden en
+  la copia. Ponerles `name` y buscarlas después de clonar.
+- Cámara de tercera persona por encima del hombro: si el personaje tiene algo grande atrás (una cola), inclinarlo
+  hacia el lado contrario de la cámara, así se ve la cabeza.
+
 ## Online sin servidor propio
 - Broker MQTT público como "correo" (mqtt.js dentro del HTML). Sala = un mundo, y el **número de
   versión del protocolo va en el nombre de la sala**: protocolo nuevo = salas nuevas, que arrancan de
